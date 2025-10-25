@@ -75,7 +75,7 @@ The service writes its health information to a JSON file (`healthstatus.json`) e
 ### Inside the container:
 
 ```bash
-docker exec -it bondservice sh
+docker exec -it backgroundservice sh
 cat /tmp/healthstatus.json
 ```
 
