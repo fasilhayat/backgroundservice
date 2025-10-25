@@ -10,7 +10,7 @@ var host = Host.CreateDefaultBuilder(args)
         {
             client.BaseAddress = new Uri("https://tiwaz.hayatnet.local/");
             client.DefaultRequestHeaders.Add("Accept", "*/*");
-            client.DefaultRequestHeaders.Add("X-API-KEY", "Skyw@lker!");
+            client.DefaultRequestHeaders.Add("X-API-KEY", "******");
         });
 
         services.AddHostedService<BondPollingService>();
