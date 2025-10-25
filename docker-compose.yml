@@ -1,0 +1,11 @@
+services:
+  bondservice:
+    build: .
+    container_name: backgroundservice
+    restart: unless-stopped
+    environment:
+      DOTNET_ENVIRONMENT: Development
+    extra_hosts:
+      - "tiwaz.hayatnet.local:192.168.0.103"
+    volumes:
+      - ./certs:/certs:ro   # mount the cert folder
