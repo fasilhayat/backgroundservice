@@ -5,7 +5,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
-using System.Net.Http;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,13 +14,29 @@ using System.Threading.Tasks;
 /// </summary>
 public class BondPollingService : BackgroundService
 {
+    /// <summary>
+    /// HttpClientFactory to create HTTP clients.
+    /// </summary>
     private readonly IHttpClientFactory _httpClientFactory;
+
+    /// <summary>
+    /// Logger for logging information and errors.
+    /// </summary>
     private readonly ILogger<BondPollingService> _logger;
 
-    // Cross-platform health file paths
-    private readonly string _healthJsonFile = Path.Combine(Path.GetTempPath(), "healthstatus.json");
+    /// <summary>
+    /// Path to the health status JSON file.
+    /// </summary>
+    private readonly string _healthJsonFile = Path.Combine(Path.GetTempPath(), "health-status.json");
+
+    /// <summary>
+    /// Path to the health status text file.
+    /// </summary>
     private readonly string _healthTextFile = Path.Combine(Path.GetTempPath(), "healthy");
 
+    /// <summary>
+    /// Health status object to track service health.
+    /// </summary>
     private readonly HealthStatus _status = new();
 
     /// <summary>
@@ -34,7 +49,12 @@ public class BondPollingService : BackgroundService
         _httpClientFactory = httpClientFactory;
         _logger = logger;
     }
-
+    
+    /// <summary>
+    /// Executes the background service.
+    /// </summary>
+    /// <param name="stoppingToken">Token to signal stopping of the service.</param>
+    /// <returns>Representation of the asynchronous operation.</returns>
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         _logger.LogInformation("BondPollingService started at: {Time}", DateTimeOffset.Now);
@@ -66,6 +86,11 @@ public class BondPollingService : BackgroundService
         _logger.LogInformation("BondPollingService stopping at: {Time}", DateTimeOffset.Now);
     }
 
+    /// <summary>
+    /// Polls the Tiwaz API for bond information.
+    /// </summary>
+    /// <param name="cancellationToken">Cancellation token for the operation.</param>
+    /// <returns>Representation of the asynchronous operation.</returns>
     private async Task PollBondsApiAsync(CancellationToken cancellationToken)
     {
         var client = _httpClientFactory.CreateClient("TiwazClient");
@@ -84,6 +109,10 @@ public class BondPollingService : BackgroundService
         Console.WriteLine("===========================\n");
     }
 
+    /// <summary>
+    /// Writes the health status to JSON and plain-text files.
+    /// </summary>
+    /// <returns>Representation of the asynchronous operation.</returns>
     private async Task WriteHealthStatusAsync()
     {
         try
